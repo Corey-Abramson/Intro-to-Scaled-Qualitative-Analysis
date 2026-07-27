@@ -1,0 +1,31 @@
+# Dependencies for Intro to Scaled Qualitative Analysis.
+#
+# This set is authored for this repository and deliberately small. Three light
+# figures do not need a deep-learning stack, so there is no torch, no
+# transformers, and no gensim here. There is also no pydantic: the one place it
+# was used has been replaced by plain keyword arguments.
+#
+# The bounds below are not guesses. The full notebook workflow -- both figures,
+# the schema validator, and the classification lanes -- was run end to end on
+# each of these three combinations, on Python 3.11:
+#
+#     numpy 1.26.4  pandas 2.1.4  matplotlib 3.8.4   scipy 1.11.4  wordcloud 1.9.3
+#     numpy 2.2.6   pandas 2.2.3  matplotlib 3.10.0  scipy 1.16.3  wordcloud 1.9.4
+#     numpy 2.4.6   pandas 3.0.5  matplotlib 3.11.1  scipy 1.17.1  wordcloud 1.9.6
+#
+# `pip check` was clean on each. On Google Colab, leave the preinstalled
+# numpy/pandas/scipy alone and install only what is missing -- a forced
+# downgrade is slow and breaks other things in that runtime.
+
+pandas>=2.1,<4
+numpy>=1.26,<3
+matplotlib>=3.8,<4
+seaborn>=0.13,<0.15
+scipy>=1.11,<2
+wordcloud>=1.9,<2
+pillow>=10,<13
+
+# Optional. The word cloud uses NLTK's tokenizer and stop words when its data
+# is present, and falls back to a bundled stop-word list and a regex tokenizer
+# when it is not. Nothing breaks if the download fails or is blocked.
+nltk>=3.8,<4
