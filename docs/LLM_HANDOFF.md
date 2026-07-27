@@ -1,17 +1,19 @@
 # Running the language-model step for real
 
 The notebook never calls a model. It prints a prompt, you run it wherever you
-already work, and you paste the answer back. That keeps the demo free of API
+already work, and you bring the answer back. That keeps the demo free of API
 keys, endpoints, and configuration, and it means nothing leaves your machine
 unless you send it.
 
 ## The loop
 
-1. Run the prompt cell. It prints a complete prompt between two rules.
+1. Run the prompt cell. It prints a complete prompt between two rules, and
+   below them the shape a good answer comes back in.
 2. Copy everything between the rules into your assistant of choice.
 3. Copy the CSV it returns.
-4. Paste that CSV into the `llm_response` string in the next cell and re-run
-   it. The grounding check runs automatically.
+4. Check it before you use it. The notebook does not do this for you: pass the
+   CSV and the same frame you prompted with to `check_llm_response()`, as in
+   the example under "Doing this on your own data" below.
 
 ## What the prompt does, and why
 
