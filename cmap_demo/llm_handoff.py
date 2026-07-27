@@ -7,12 +7,15 @@ it, plus the pieces of the large-language-model lane that are not the model:
 * ``code_by_dictionary()`` -- the dictionary/regex lane, with real matches;
 * ``build_llm_prompt()`` -- a ready-to-paste prompt naming the public data and
   embedding the exact rows to code;
-* ``check_llm_response()`` -- the grounding check run on whatever comes back;
+* ``check_llm_response()`` -- checks whatever comes back against the rows that
+  were actually sent, which is what catches an answer about text the model
+  never read;
 * ``code_by_stub()`` -- a deterministic stand-in so the notebook always
   produces a column, clearly labelled as not being a model result.
 
 Nothing here calls a model, opens a network connection, or reads a key. The
-model step happens wherever you already work, and you paste the result back.
+model step happens wherever you already work, and you bring the result back to
+check it.
 """
 
 import ast
