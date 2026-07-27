@@ -78,10 +78,19 @@ def dictionary_matches(text, limit=3):
 def build_llm_prompt(df, n_rows=5, csv_url=PUBLIC_CSV_URL):
     """Build a ready-to-paste prompt for coding ``n_rows`` rows.
 
-    The prompt names the public dataset, so a model that browses can go and
-    read it, and embeds the exact rows with their ``doc_id``s, so a model that
-    cannot browse still has the text in front of it. The embedded ``doc_id``s
-    are what ``check_llm_response()`` later checks the answer against.
+    The prompt names the public dataset, so a model that browses can read the
+    full text, and embeds the selected rows with their ``doc_id``s so a model
+    that cannot browse still has something to work from. The embedded
+    ``doc_id``s are what ``check_llm_response()`` checks the answer against.
+
+    Row text is **truncated to ``EXCERPT_CHARS`` characters**, and the prompt
+    says so. The corpus carries a restriction on quotation, so long excerpts
+    are not shipped. The practical cost is real: if the only evidence for a
+    code sits past the cutoff, a non-browsing model cannot see it. Raise
+    ``EXCERPT_CHARS`` for your own unrestricted data.
+
+    Returns the prompt. Pass the SAME frame you passed here to
+    ``check_llm_response()``, i.e. ``df.head(n_rows)``, not the full frame.
     """
     sample = df.head(n_rows)
     allowed = ", ".join(ALLOWED_CODES)
@@ -90,7 +99,9 @@ def build_llm_prompt(df, n_rows=5, csv_url=PUBLIC_CSV_URL):
         "You are helping code qualitative interview data.",
         "",
         f"The full dataset is public: {csv_url}",
-        "Below are the exact rows to code, excerpted from that dataset.",
+        f"Below are the rows to code. Each one is truncated to about",
+        f"{EXCERPT_CHARS} characters; a trailing [...] marks where text was cut.",
+        "If you can open the URL, read the full text for these doc_ids there.",
         "",
         "TASK",
         f"Assign codes to each of the {len(sample)} rows below.",
@@ -120,13 +131,32 @@ def build_llm_prompt(df, n_rows=5, csv_url=PUBLIC_CSV_URL):
     return "\n".join(lines)
 
 
+def _exact_int(value, where):
+    """Convert to int only if the value is exactly integral."""
+    try:
+        as_float = float(value)
+    except (TypeError, ValueError) as exc:
+        raise ValueError(f"{where}: {value!r} is not a number.") from exc
+    if as_float != int(as_float):
+        raise ValueError(
+            f"{where}: {value!r} is not a whole number. doc_ids are integers; "
+            "a fractional value means the answer was altered in transit."
+        )
+    return int(as_float)
+
+
 def check_llm_response(response_csv, source_df):
     """Check a returned CSV against the rows that were actually sent.
 
-    A model with no access to the data can return five plausible, perfectly
-    formed rows. Parsing proves syntax, not grounding. This compares the
-    returned ``doc_id``s and row count against the local source and refuses
-    anything that disagrees.
+    This is an identity and schema check, not a check that the codes are
+    correct. It proves the answer is about the rows you sent: the row count
+    matches, every ``doc_id`` is one you supplied and is exactly integral, and
+    every code is in the allowed list. That is what catches a model inventing
+    plausible rows for text it never read.
+
+    It cannot tell you the codes are *right*. An answer that returns your
+    ``doc_id``s and labels every row ``family`` passes this check. Judging
+    whether a code fits the text is still your job.
 
     Returns a frame with ``doc_id`` and a parsed ``codes`` list. Raises
     ``ValueError`` on any mismatch.
@@ -143,8 +173,9 @@ def check_llm_response(response_csv, source_df):
             f"got {list(returned.columns)}"
         )
 
-    expected_ids = [int(x) for x in source_df["doc_id"]]
-    got_ids = [int(x) for x in returned["doc_id"]]
+    expected_ids = [_exact_int(x, "source doc_id") for x in source_df["doc_id"]]
+    got_ids = [_exact_int(x, "returned doc_id") for x in returned["doc_id"]]
+    returned["doc_id"] = got_ids
 
     if len(got_ids) != len(expected_ids):
         raise ValueError(
@@ -177,22 +208,47 @@ def check_llm_response(response_csv, source_df):
     out = returned[["doc_id"]].copy()
     out["codes"] = parsed
     print(
-        f"[OK] Grounding check passed: {len(out)} rows, doc_ids match source, "
-        f"all codes within the allowed list."
+        f"[OK] Identity check passed: {len(out)} rows, doc_ids match the rows "
+        f"that were sent, all codes within the allowed list."
     )
+    print("     This proves the answer is about your rows. It does not prove "
+          "the codes are correct.")
     return out
 
 
 def code_by_stub(df, verbose=True):
     """Deterministic stand-in for the model, so the notebook always finishes.
 
-    This is NOT a model result. It applies the same dictionaries as lane 1, so
-    it is reproducible and inspectable, and it is labelled wherever it prints.
+    This is NOT a model result, and it is not an independent third opinion
+    either: it reuses the same dictionaries as lane 1, so it agrees with lane 1
+    by construction. Its only job is to guarantee the notebook produces a
+    coded column when nobody has pasted a real answer back.
     """
     if verbose:
         print("SIMULATED -- deterministic stand-in, not a model result.")
-        print("The real lane is the prompt above, run in your own assistant.")
+        print("It reuses the lane 1 dictionaries, so it agrees with lane 1 by")
+        print("construction. The real lane is the prompt above, run in your")
+        print("own assistant and pasted back.")
     return [code_by_dictionary(text) for text in df["text"]]
+
+
+def apply_llm_codes(base_codes, df, checked):
+    """Overlay checked model codes onto the base codes, matched by ``doc_id``.
+
+    ``base_codes`` is one list of codes per row of ``df``. Rows whose
+    ``doc_id`` appears in ``checked`` take the model's codes; every other row
+    keeps what it had. Returns the merged list and the number of rows replaced.
+    """
+    replacement = {int(row.doc_id): list(row.codes)
+                   for row in checked.itertuples()}
+    merged, replaced = [], 0
+    for codes, doc_id in zip(base_codes, df["doc_id"]):
+        key = int(doc_id)
+        if key in replacement:
+            merged.append(replacement[key]); replaced += 1
+        else:
+            merged.append(codes)
+    return merged, replaced
 
 
 def merge_code_columns(*code_lists):
@@ -222,8 +278,8 @@ def parse_codes_column(series):
 
 
 __all__ = [
-    "PUBLIC_CSV_URL", "CONCEPT_DICTIONARIES", "ALLOWED_CODES",
+    "PUBLIC_CSV_URL", "EXCERPT_CHARS", "CONCEPT_DICTIONARIES", "ALLOWED_CODES",
     "code_by_dictionary", "dictionary_matches", "build_llm_prompt",
-    "check_llm_response", "code_by_stub", "merge_code_columns",
-    "codes_to_source_shape", "parse_codes_column",
+    "check_llm_response", "code_by_stub", "apply_llm_codes",
+    "merge_code_columns", "codes_to_source_shape", "parse_codes_column",
 ]

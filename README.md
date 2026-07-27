@@ -20,6 +20,11 @@ Built for the Stanford / CASBS **AIMS** session on qualitative and textual data.
 git clone https://github.com/Corey-Abramson/Intro-to-Scaled-Qualitative-Analysis.git
 cd Intro-to-Scaled-Qualitative-Analysis
 pip install -r requirements.txt
+
+# requirements.txt holds what the analysis needs, not a notebook front end.
+# Skip this line if you already have Jupyter, or open the file in VS Code.
+pip install notebook
+
 jupyter notebook notebook/intro_scaled_qualitative_analysis.ipynb
 ```
 

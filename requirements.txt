@@ -5,7 +5,9 @@
 # transformers, and no gensim here. There is also no pydantic: the one place it
 # was used has been replaced by plain keyword arguments.
 #
-# The bounds below are not guesses. The full notebook workflow -- both figures,
+# The bounds below are not guesses, though you are taking the author's word
+# for it: this repository ships no CI, so nothing here re-runs the matrix.
+# The full notebook workflow -- both figures,
 # the schema validator, and the classification lanes -- was run end to end on
 # each of these three combinations, on Python 3.11:
 #

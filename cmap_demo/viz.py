@@ -19,10 +19,13 @@ inline at the line it touches:
     A3  ``os.makedirs(out_dir, exist_ok=True)`` runs before the first write.
         Git does not track an empty ignored directory, so a clean checkout has
         no ``output/`` for the first save to land in.
-    A4  The pydantic ``HeatmapInput`` model becomes plain keyword arguments.
-        It was only ever a type annotation, never constructed inside the
-        function, and dropping it removes a dependency whose v1/v2 split is a
-        live hazard.
+    A4  The pydantic ``HeatmapInput`` model becomes plain keyword arguments,
+        removing a dependency whose v1/v2 split is a live hazard. The model was
+        never constructed inside the function; the body only unpacked it. But
+        it did carry two checks of its own, an existence check on ``filepath``
+        and a ``num_codes > 0`` validator, so both are restated explicitly at
+        the top of the function. Without that, dropping the model would have
+        quietly dropped the validation with it.
     A5  ``stopwords.words("english")`` and ``word_tokenize`` become the
         ``_stopwords()`` and ``_tokenize()`` helpers below, so the notebook
         runs whether or not NLTK's corpora were downloaded.
@@ -289,6 +292,17 @@ def create_code_cooccurrence_heatmap(
     clustered=True,
     out_dir=Path("output"),
 ):
+    # A4, continued. The pydantic model this replaced did two things besides
+    # carry types: `filepath: FilePath` refused a path that does not exist, and
+    # a field validator refused num_codes <= 0. Dropping the model would have
+    # dropped both, turning an invalid num_codes into a confusing "No codes
+    # found" message instead of an error. Restated here so the replacement is
+    # faithful rather than merely equivalent in the happy path.
+    if int(num_codes) <= 0:
+        raise ValueError("num_codes must be greater than 0")
+    if not os.path.exists(filepath):
+        raise FileNotFoundError(f"No such file: {filepath}")
+
     os.makedirs(out_dir, exist_ok=True)
 
     df = pd.read_csv(filepath)
