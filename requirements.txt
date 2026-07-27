@@ -5,19 +5,10 @@
 # transformers, and no gensim here. There is also no pydantic: the one place it
 # was used has been replaced by plain keyword arguments.
 #
-# The bounds below are not guesses, though you are taking the author's word
-# for it: this repository ships no CI, so nothing here re-runs the matrix.
-# The full notebook workflow -- both figures,
-# the schema validator, and the classification lanes -- was run end to end on
-# each of these three combinations, on Python 3.11:
-#
-#     numpy 1.26.4  pandas 2.1.4  matplotlib 3.8.4   scipy 1.11.4  wordcloud 1.9.3
-#     numpy 2.2.6   pandas 2.2.3  matplotlib 3.10.0  scipy 1.16.3  wordcloud 1.9.4
-#     numpy 2.4.6   pandas 3.0.5  matplotlib 3.11.1  scipy 1.17.1  wordcloud 1.9.6
-#
-# `pip check` was clean on each. On Google Colab, leave the preinstalled
-# numpy/pandas/scipy alone and install only what is missing -- a forced
-# downgrade is slow and breaks other things in that runtime.
+# The bounds below cover numpy 1.x and 2.x with the matching pandas,
+# matplotlib, and scipy releases, on Python 3.11. On Google Colab, leave the
+# preinstalled numpy/pandas/scipy alone and install only what is missing; a
+# forced downgrade is slow and breaks other things in that runtime.
 
 pandas>=2.1,<4
 numpy>=1.26,<3
