@@ -28,11 +28,15 @@ nltk_data/
 !docs/llm_reference_output.csv
 !requirements.txt
 
-# Slide decks ship as GitHub release assets, never as tracked files. The AIMS
-# deck is 21 MB against a 5 MB repository, and git keeps a committed blob in
-# history even after it is deleted. The Colab path in the setup cell clones
-# this repository at the pinned tag, so anything tracked here is downloaded
-# before the notebook can start.
+# Slide decks are ignored by default: git keeps a committed blob in history even
+# after it is deleted, and the Colab path in the setup cell clones this
+# repository at the pinned tag, so anything tracked here is downloaded before
+# the notebook can start. The AIMS deck is allowed through by name, as a
+# deliberate exception; any other deck stays out.
 *.pptx
 *.key
-slides/
+!slides/0_abramson_AIMS_v3.pptx
+
+# Office lock files. These appear beside an open document and must never ship.
+~$*
+.~lock.*
