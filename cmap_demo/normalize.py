@@ -35,10 +35,13 @@ _FILENAME_RE = re.compile(
 # Timestamps in square or round brackets, [HH:MM:SS] / (MM:SS) and so on.
 _TIMESTAMP_RE = re.compile(r"[\[(]\s*\d{1,2}:\d{2}(?::\d{2})?\s*[\])]")
 
-# A speaker label at the start of a line: "Speaker 1:" or "NAME:". Deliberately
-# generic -- no project-specific identifier shapes.
+# A speaker label at the start of a line: "Speaker 1:", "NAME:", "ENG001:".
+# Deliberately generic -- it describes the shape of a label, not any particular
+# project's identifiers. The class admits digits and "_" because role-code labels
+# are ordinary in transcripts; without them a label like "ENG001:" returns None
+# and the whole turn is silently dropped as front matter.
 _SPEAKER_RE = re.compile(
-    r"^\s*(?P<speaker>Speaker\s+\d+|[A-Z][A-Za-z.'\- ]{0,40}?)\s*:\s*(?P<rest>.*)$"
+    r"^\s*(?P<speaker>Speaker\s+\d+|[A-Z][A-Za-z0-9._'\- ]{0,40}?)\s*:\s*(?P<rest>.*)$"
 )
 
 

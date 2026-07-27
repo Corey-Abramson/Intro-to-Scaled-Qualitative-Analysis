@@ -3,40 +3,45 @@ This file was written for this repository. It is not real interview data and
 does not describe a real person. It exists so the normalization step has
 something messy to clean up.
 
-[00:00:04] Speaker 1:   Thanks for making the time today. Could you start by
+Speaker labels follow the role-code-and-number convention described in Abramson,
+Prendergast, Li and Dohan (2026), Annual Review of Sociology 52, page 14
+footnote 6. ENG001 is our own adaptation of that convention. The paper does not
+print it. INTV_CA is an authored label for the interviewer, not a published one.
+
+[00:00:04] INTV_CA:   Thanks for making the time today. Could you start by
 telling me how you first got into engineering?
 
-[00:00:19] Speaker 2: Sure.   I grew up in a small town, and my father ran a
+[00:00:19] ENG001: Sure.   I grew up in a small town, and my father ran a
 radio repair shop out of our garage. I spent most of my childhood taking things
 apart on that workbench. By the time I got to high school I had already built
 two receivers from scratch, so the path was fairly obvious to everybody except
 me.
 
-[00:01:02] Speaker 1: And you went straight from there to university?
+[00:01:02] INTV_CA: And you went straight from there to university?
 
-[00:01:07] Speaker 2: Not quite.    There was a gap of about two years. I
+[00:01:07] ENG001: Not quite.    There was a gap of about two years. I
 enlisted, and I spent that time working on communications equipment for the
 service. That turned out to matter more than any class I ever took, because you
 learn very quickly how a system fails when somebody is depending on it at three
 in the morning.
 
-[00:02:41] Speaker 1: What did you study once you did enroll?
+[00:02:41] INTV_CA: What did you study once you did enroll?
 
-[00:02:46] Speaker 2: Electrical engineering. The department was small then --
+[00:02:46] ENG001: Electrical engineering. The department was small then --
 maybe forty of us in the whole program. My advisor had come out of the wartime
 radar work, and he taught the subject as though every circuit had a story
 attached to it. I have tried to teach that way ever since.
 
-[00:04:12] Speaker 1: Was your family supportive of that choice?
+[00:04:12] INTV_CA: Was your family supportive of that choice?
 
-[00:04:15] Speaker 2: My mother was.   She had wanted to go to college herself
+[00:04:15] ENG001: My mother was.   She had wanted to go to college herself
 and never got the chance, so she treated my degree as partly hers. My father was
 harder to read. He never said much about it directly, but he kept every letter I
 sent home from school, and I found them in a shoebox after he died.
 
-[00:05:50] Speaker 1: How did your first job come about?
+[00:05:50] INTV_CA: How did your first job come about?
 
-[00:05:55] Speaker 2: Through the department, really. A laboratory recruiter
+[00:05:55] ENG001: Through the department, really. A laboratory recruiter
 came through in the spring, and my advisor put my name forward. I started that
 July and stayed nineteen years. The work changed completely three or four times
 over that stretch, which is the part nobody warns you about when you pick a
