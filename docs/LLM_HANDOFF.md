@@ -38,6 +38,9 @@ The rules in the prompt are not stylistic:
 | An explicit list of allowed codes | Synonyms, invented categories, inconsistent capitalisation |
 | Exactly one row out per row in | Silent misalignment between your codes and your data |
 | Reuse the given `doc_id`s | An answer that cannot be checked against the source |
+| A verbatim quote per coded row | Codes asserted about text the model never read |
+| A hard character cap on the quote | Returning the passage when the phrase would do, against a corpus that restricts quotation |
+| A minimum length on the quote | Passing the grounding check with a common word that appears in every row |
 | Post-process outside the model | Splitting and lowercasing are deterministic; do not ask a model to do them |
 
 ## What the check proves, and what it does not
@@ -45,18 +48,35 @@ The rules in the prompt are not stylistic:
 A model with no access to the data can return five perfectly formed, entirely
 invented rows. Parsing proves syntax, not grounding.
 
-So `check_llm_response()` compares the returned `doc_id`s and row count against
-the local source before accepting anything, and rejects codes outside the
-allowed list. If a returned answer is internally consistent but disagrees with
-the source, the answer is wrong, not the source.
+So `check_llm_response()` runs two checks that answer different questions. The
+**identity check** compares the returned `doc_id`s and row count against the
+local source and rejects codes outside the allowed list. The **grounding check**
+takes each non-empty `quote` and requires it to appear verbatim in the row it is
+attached to, at a length between `QUOTE_MIN_CHARS` and `QUOTE_CHARS`. If a
+returned answer is internally consistent but disagrees with the source, the
+answer is wrong, not the source.
+
+The grounding check is the stronger of the two, and it is why the third column
+exists. An identifier can be copied straight back out of the prompt by a model
+that read nothing, and so can a single common word. "the" appears verbatim in
+almost every row in this corpus, so a check that only asked for a verbatim
+match would accept `0,"family","the"` five times over and report it grounded.
+The minimum length is what closes that: a span of `QUOTE_MIN_CHARS` or more has
+to belong to the row it is attached to. It makes fabrication more work than
+reading the text rather than impossible, which is the honest description of
+what any check like this buys. Whitespace is normalized on both sides first,
+because a model reflowing a line is a transport artefact rather than a
+paraphrase; everything else must match exactly.
 
 It rejects, with a specific message: a wrong row count, fabricated or renumbered
 `doc_id`s, an identifier that is not exactly a whole number, a missing column,
-prose instead of CSV, and any code outside the allowed four.
+prose instead of CSV, any code outside the allowed four, a quote that cannot be
+found in the row it claims to come from, a quote over `QUOTE_CHARS`, and a quote
+under `QUOTE_MIN_CHARS`.
 
-**Be clear about the limit.** This is an identity and schema check. It proves
-the answer is about the rows you sent. It cannot tell you the codes are right:
-an answer that returns your `doc_id`s and labels every row `family` passes it
+**Be clear about the limit.** Together these prove the answer is about the rows
+you sent and drawn from their words. Neither tells you the codes are right: an
+answer that quotes every row honestly and labels them all `family` passes both
 cleanly. Nothing here substitutes for reading the text, and on real work you
 would validate a sample against human coding.
 
@@ -64,19 +84,23 @@ would validate a sample against human coding.
 
 `llm_reference_output.csv` is a real answer, not a mock-up.
 
-It was produced by giving an AI assistant the prompt text and nothing else: no
-access to this repository, no access to the dataset, and no tools of any kind.
-The result was then run through `check_llm_response()`, which passed: five
-rows, `doc_id`s `0, 1, 3, 5, 7` matching the source, all codes within the
-allowed list.
+It was produced by giving an assistant the prompt text and nothing else. The
+model was a GPT one, where this repository was otherwise assembled with Claude,
+so the reference answer and the prompt it answers do not come from the same
+family. It ran in a read-only sandbox. The result was then put through
+`check_llm_response()`, which passed both checks: five rows, `doc_id`s
+`0, 1, 3, 5, 7` matching the source, every code within the allowed four, and
+four quotes each located verbatim in its own row. The fifth row took no codes
+and so returned no quote, which the prompt allows and the check accepts.
 
 Three caveats, in descending order of importance. **This provenance is reported
-by the author, not provable from the files here**: the repository contains the
-output, not a transcript of its generation, so take it as a worked example
-rather than evidence. It also comes from one assistant on one occasion, which
-is not a benchmark. And these models are not deterministic, so your own run
-need not match it row for row. That last point is the argument for checking
-every answer rather than trusting any single one.
+by the author, not provable from the files here**: the repository holds the
+output, not a transcript of its generation, and the sandbox the model ran in
+could read this directory, even though nothing in the answer suggests it did.
+Take it as a worked example rather than as evidence. It also comes from one
+assistant on one occasion, which is not a benchmark. And these models are not
+deterministic, so your own run need not match it row for row. That last point
+is the argument for checking every answer rather than trusting any single one.
 
 ## Doing this on your own data
 

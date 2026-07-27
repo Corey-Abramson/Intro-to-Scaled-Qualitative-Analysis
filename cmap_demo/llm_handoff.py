@@ -34,6 +34,16 @@ PUBLIC_CSV_URL = (
 # see SAMPLE_DATA.md.
 EXCERPT_CHARS = 300
 
+# The longest verbatim span the model may return as its evidence. Same
+# restriction, same reason: quote the least text that makes the point.
+QUOTE_CHARS = 120
+
+# The shortest span that counts as evidence. Without a floor the grounding
+# check is trivially satisfied: "the" appears verbatim in almost every row, so
+# a model that read nothing passes by quoting a common word. A span this long
+# has to be specific to the row it is attached to.
+QUOTE_MIN_CHARS = 25
+
 # One vocabulary, four concepts. Patterns are deliberately broad and are
 # validated against real corpus text rather than assumed to hit.
 CONCEPT_DICTIONARIES = {
@@ -114,11 +124,22 @@ def build_llm_prompt(df, n_rows=5, csv_url=PUBLIC_CSV_URL):
         "- A row may take several codes, or none.",
         f"- Return exactly {len(sample)} rows, one per input row.",
         "- Return CSV only. No prose, no explanation, no code fences.",
-        "- Use exactly these two columns, with this header:",
-        "      doc_id,codes",
+        "- Use exactly these three columns, with this header:",
+        "      doc_id,codes,quote",
         "- Put multiple codes in one quoted, semicolon-separated field,",
-        '      for example: 1234,"career;family"',
+        '      for example: 1234,"career;family","I took the job at the lab"',
         "- Reuse each doc_id exactly as given below. Do not renumber them.",
+        "- quote must be copied VERBATIM from that row's text below: the",
+        "      shortest span that supports the codes. Do not paraphrase,",
+        "      summarise, or join separated fragments.",
+        f"- quote must be at most {QUOTE_CHARS} characters. This is a hard limit,"
+        " not",
+        "      a guideline; the corpus restricts how much may be quoted. Count",
+        "      the characters before you answer, and cut to the phrase that",
+        "      carries the code.",
+        f"- quote must be at least {QUOTE_MIN_CHARS} characters: a phrase that",
+        "      belongs to this row, not a single common word.",
+        "- If you assign no codes to a row, leave quote empty.",
         "",
         "ROWS",
     ]
@@ -151,25 +172,36 @@ def _exact_int(value, where):
 def check_llm_response(response_csv, source_df):
     """Check a returned CSV against the rows that were actually sent.
 
-    This is an identity and schema check, not a check that the codes are
-    correct. It proves the answer is about the rows you sent: the row count
-    matches, every ``doc_id`` is one you supplied and is exactly integral, and
-    every code is in the allowed list. That is what catches a model inventing
-    plausible rows for text it never read.
+    Two checks, doing different work. The identity check proves the answer is
+    about the rows you sent: the row count matches, every ``doc_id`` is one you
+    supplied and is exactly integral, and every code is in the allowed list.
+    The grounding check proves the answer is drawn from their text: every
+    non-empty ``quote`` must appear verbatim in the row it is attached to, at a
+    length between ``QUOTE_MIN_CHARS`` and ``QUOTE_CHARS``.
 
-    It cannot tell you the codes are *right*. An answer that returns your
-    ``doc_id``s and labels every row ``family`` passes this check. Judging
-    whether a code fits the text is still your job.
+    The second is the stronger of the two, and the floor is what gives it
+    force. A ``doc_id`` can be copied back out of the prompt by a model that
+    read nothing, and so can a single common word: "the" appears verbatim in
+    almost every row, so without a minimum length the grounding check passes
+    an answer that read nothing at all. A span of ``QUOTE_MIN_CHARS`` or more
+    has to belong to the row it is attached to. That makes fabrication more
+    work than reading the text rather than impossible, which is the right bar
+    for the failure this lane guards against: confident output about material
+    the model never saw.
 
-    Returns a frame with ``doc_id`` and a parsed ``codes`` list. Raises
-    ``ValueError`` on any mismatch.
+    Neither tells you the codes are *right*. An answer that returns your
+    ``doc_id``s, quotes each row honestly, and labels every one ``family``
+    passes both cleanly. Judging whether a code fits the text is still your job.
+
+    Returns a frame with ``doc_id``, a parsed ``codes`` list, and the
+    whitespace-normalized ``quote``. Raises ``ValueError`` on any mismatch.
     """
     try:
         returned = pd.read_csv(io.StringIO(response_csv.strip()))
     except Exception as exc:
         raise ValueError(f"Response is not parseable CSV: {exc}") from exc
 
-    missing = {"doc_id", "codes"} - set(returned.columns)
+    missing = {"doc_id", "codes", "quote"} - set(returned.columns)
     if missing:
         raise ValueError(
             f"Response is missing column(s) {sorted(missing)}; "
@@ -208,14 +240,56 @@ def check_llm_response(response_csv, source_df):
             f"Response used codes outside the allowed list: {sorted(unknown)}"
         )
 
+    # The quote is the grounding proof. A doc_id can be echoed back from the
+    # prompt without reading anything; a verbatim span cannot. Whitespace is
+    # normalized on both sides because a model reflowing a line is a transport
+    # artefact, not a paraphrase. Anything else must match character for
+    # character or the answer is not about this text.
+    source_text = {_exact_int(row.doc_id, "source doc_id"):
+                   " ".join(str(row.text).split())
+                   for row in source_df.itertuples()}
+    quotes = []
+    for doc_id, value in zip(returned["doc_id"], returned["quote"]):
+        quote = "" if pd.isna(value) else " ".join(str(value).split())
+        if quote:
+            if len(quote) > QUOTE_CHARS:
+                raise ValueError(
+                    f"doc_id {doc_id}: quote is {len(quote)} characters, over "
+                    f"the {QUOTE_CHARS}-character limit. This corpus restricts "
+                    "quotation; ask for the shortest span that carries the code."
+                )
+            if len(quote) < QUOTE_MIN_CHARS:
+                raise ValueError(
+                    f"doc_id {doc_id}: quote is {len(quote)} characters, under "
+                    f"the {QUOTE_MIN_CHARS}-character minimum.\n"
+                    f"  returned: {quote!r}\n"
+                    "A span this short appears in almost any row, so finding "
+                    "it here is not evidence that the model read this one. Ask "
+                    "for the phrase that carries the code."
+                )
+            if quote not in source_text[doc_id]:
+                raise ValueError(
+                    f"doc_id {doc_id}: the returned quote is not a verbatim "
+                    "span of the text that was sent.\n"
+                    f"  returned: {quote[:80]!r}\n"
+                    "A quote that cannot be found in the source means the "
+                    "model reworded it or produced it from nothing. Either "
+                    "way the answer is not evidence about this row."
+                )
+        quotes.append(quote)
+
     out = returned[["doc_id"]].copy()
     out["codes"] = parsed
+    out["quote"] = quotes
+    grounded = sum(1 for q in quotes if q)
     print(
         f"[OK] Identity check passed: {len(out)} rows, doc_ids match the rows "
         f"that were sent, all codes within the allowed list."
     )
-    print("     This proves the answer is about your rows. It does not prove "
-          "the codes are correct.")
+    print(f"[OK] Grounding check passed: {grounded} of {len(out)} rows carry a "
+          "quote found verbatim in the text that was sent.")
+    print("     Together these prove the answer is about your rows and drawn "
+          "from their text. Neither proves the codes are correct.")
     return out
 
 

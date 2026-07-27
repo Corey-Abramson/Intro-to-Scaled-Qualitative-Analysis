@@ -27,3 +27,12 @@ nltk_data/
 !data/raw/interview_demo01_20240115.txt
 !docs/llm_reference_output.csv
 !requirements.txt
+
+# Slide decks ship as GitHub release assets, never as tracked files. The AIMS
+# deck is 21 MB against a 5 MB repository, and git keeps a committed blob in
+# history even after it is deleted. The Colab path in the setup cell clones
+# this repository at the pinned tag, so anything tracked here is downloaded
+# before the notebook can start.
+*.pptx
+*.key
+slides/

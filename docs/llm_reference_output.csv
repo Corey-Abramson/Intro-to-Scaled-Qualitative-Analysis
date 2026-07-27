@@ -1,6 +1,6 @@
-doc_id,codes
-0,"education"
-1,"education"
-3,"career;education"
-5,"career;education;military"
-7,"career"
+doc_id,codes,quote
+0,"career;education","education and experience before Rad Lab"
+1,"education","I got my Master of Engineering from Yale University in 1940"
+3,"career","After Yale I went to United States Steel in Pittsburgh in their electrical engineering department."
+5,"career;education;military","called to active duty. He contacted me and said, ""How about you coming to RI and teaching the electrical engineering?"""
+7,"",""

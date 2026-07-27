@@ -10,6 +10,7 @@ All DOIs were resolved against CrossRef on 2026-07-27.
 Abramson, Corey M., and Daniel Dohan. 2015. "Beyond Text: Using Arrays to Represent and
 Analyze Ethnographic Data." *Sociological Methodology* 45(1):272–319.
 https://doi.org/10.1177/0081175015578740
+*(Public version, PubMed Central: https://pmc.ncbi.nlm.nih.gov/articles/PMC4730903/)*
 
 Abramson, Corey M., Jacqueline Joslyn, Katharine A. Rendle, Sarah B. Garrett, and Daniel
 Dohan. 2018. "The Promises of Computational Ethnography: Improving Transparency,
@@ -37,6 +38,11 @@ New Directions." arXiv:2412.06087. https://arxiv.org/abs/2412.06087
 
 Bail, Christopher A. 2024. "Can Generative AI Improve Social Science?" *Proceedings of the
 National Academy of Sciences* 121(21). https://doi.org/10.1073/pnas.2314021121
+
+Chae, Youngjin, and Thomas Davidson. 2025. "Large Language Models for Text
+Classification: From Zero-Shot Learning to Instruction-Tuning." *Sociological Methods &
+Research* 55(2):501–567. https://doi.org/10.1177/00491241251325243
+*(Open preprint: https://doi.org/10.31235/osf.io/sthwk)*
 
 Edelmann, Achim, Tom Wolff, Danielle Montagne, and Christopher A. Bail. 2020.
 "Computational Social Science and Sociology." *Annual Review of Sociology* 46(1):61–81.
