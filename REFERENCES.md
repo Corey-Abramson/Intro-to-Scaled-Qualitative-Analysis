@@ -44,6 +44,9 @@ Classification: From Zero-Shot Learning to Instruction-Tuning." *Sociological Me
 Research* 55(2):501–567. https://doi.org/10.1177/00491241251325243
 *(Open preprint: https://doi.org/10.31235/osf.io/sthwk)*
 
+D'Andrade, Roy G. 1978. "U-Statistic Hierarchical Clustering." *Psychometrika*
+43(1):59–67. https://doi.org/10.1007/BF02294089
+
 Edelmann, Achim, Tom Wolff, Danielle Montagne, and Christopher A. Bail. 2020.
 "Computational Social Science and Sociology." *Annual Review of Sociology* 46(1):61–81.
 https://doi.org/10.1146/annurev-soc-121919-054621
@@ -58,6 +61,9 @@ of Artificial Intelligence Stand-Ins for Social Agents." *Sociological Methods &
 Law, Tina, and Elizabeth Roberto. 2025. "Generative Multimodal Models for Social Science:
 An Application with Satellite and Streetscape Imagery." *Sociological Methods & Research*
 54(3):889–932. https://doi.org/10.1177/00491241251339673
+
+Mohr, John W. 1998. "Measuring Meaning Structures." *Annual Review of Sociology*
+24(1):345–370. https://doi.org/10.1146/annurev.soc.24.1.345
 
 Nelson, Laura K. 2020. "Computational Grounded Theory: A Methodological Framework."
 *Sociological Methods & Research* 49(1):3–42. https://doi.org/10.1177/0049124117729703
