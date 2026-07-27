@@ -6,6 +6,7 @@ authors:
   - family-names: Abramson
     given-names: Corey M.
     affiliation: Rice University
+    orcid: "https://orcid.org/0000-0001-6306-6910"
 repository-code: "https://github.com/Corey-Abramson/Intro-to-Scaled-Qualitative-Analysis"
 abstract: >-
   A single plug-and-play notebook demonstrating a scaled qualitative analysis
