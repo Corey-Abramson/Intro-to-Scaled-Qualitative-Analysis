@@ -1,0 +1,37 @@
+BSD 3-Clause License — CODE ONLY
+
+Copyright (c) 2026, Corey M. Abramson / Computational Ethnography Lab
+All rights reserved.
+
+SCOPE OF THIS LICENSE
+---------------------
+This license covers the SOFTWARE in this repository only — the notebook,
+the `cmap_demo/` package, and the synthetic sample transcript authored here.
+
+It does NOT cover the dataset in `data/1_cleaned_data.csv`. That corpus was
+webscraped from the IEEE History Center's Engineering and Technology History
+Wiki and carries its own separate restriction: no part of the data may be
+quoted for publication without the written permission of the Director of the
+IEEE History Center. See SAMPLE_DATA.md for the full notice and provenance.
+Nothing in this license grants any right in that data.
+
+Portions of `cmap_demo/viz.py` are recycled from the CMAP Visualization
+Toolkit (BSD 3-Clause, Computational Ethnography Lab) and carry per-function
+attribution headers naming their source and release tag.
+
+---
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+3. Neither the name of the Computational Ethnography Lab, Rice University,
+   nor the names of its contributors may be used to endorse or promote products
+   derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

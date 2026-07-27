@@ -1,0 +1,96 @@
+cff-version: 1.2.0
+title: "Intro to Scaled Qualitative Analysis"
+message: "If you use this teaching material, please cite it as below."
+type: software
+authors:
+  - family-names: Abramson
+    given-names: Corey M.
+    affiliation: Rice University
+repository-code: "https://github.com/Corey-Abramson/Intro-to-Scaled-Qualitative-Analysis"
+abstract: >-
+  A single plug-and-play notebook demonstrating a scaled qualitative analysis
+  workflow end to end on public interview data: normalization of raw text into
+  machine-readable rows, reading a coded corpus, three lanes of classification
+  (dictionary, machine learning, large language model), and visualization.
+  Built for the Stanford / CASBS AIMS session on qualitative and textual data.
+  Code is BSD 3-Clause; the bundled corpus is not, and retains its own use
+  restriction.
+keywords:
+  - qualitative analysis
+  - computational social science
+  - qualitative coding
+  - text analysis
+  - ethnography
+  - large language models
+  - teaching materials
+license: BSD-3-Clause
+license-url: "https://github.com/Corey-Abramson/Intro-to-Scaled-Qualitative-Analysis/blob/main/LICENSE"
+version: 1.0.0
+date-released: "2026-07-28"
+references:
+  - type: article
+    title: >-
+      Qualitative Coding in the Computational Era: A Hybrid Approach to Improve
+      Reliability and Reduce Effort for Coding Ethnographic Interviews
+    authors:
+      - family-names: Li
+        given-names: Zhuofan
+      - family-names: Dohan
+        given-names: Daniel
+      - family-names: Abramson
+        given-names: Corey M.
+    journal: Socius
+    volume: 7
+    year: 2021
+    doi: 10.1177/23780231211062345
+  - type: article
+    title: >-
+      The Promises of Computational Ethnography: Improving Transparency,
+      Replicability, and Validity for Realist Approaches to Ethnographic Analysis
+    authors:
+      - family-names: Abramson
+        given-names: Corey M.
+      - family-names: Joslyn
+        given-names: Jacqueline
+      - family-names: Rendle
+        given-names: Katharine A.
+      - family-names: Garrett
+        given-names: Sarah B.
+      - family-names: Dohan
+        given-names: Daniel
+    journal: Ethnography
+    volume: 19
+    issue: 2
+    start: 254
+    end: 284
+    year: 2018
+    doi: 10.1177/1466138117725340
+  - type: article
+    title: "Beyond Text: Using Arrays to Represent and Analyze Ethnographic Data"
+    authors:
+      - family-names: Abramson
+        given-names: Corey M.
+      - family-names: Dohan
+        given-names: Daniel
+    journal: Sociological Methodology
+    volume: 45
+    issue: 1
+    start: 272
+    end: 319
+    year: 2015
+    doi: 10.1177/0081175015578740
+  - type: software
+    title: >-
+      The Cultural Mapping and Pattern Analysis (CMAP) Visualization Toolkit:
+      Open Source Text Analysis for Qualitative and Computational Social Science
+    authors:
+      - family-names: Abramson
+        given-names: Corey M.
+      - family-names: Nian
+        given-names: Yuhan
+    year: 2025
+    doi: 10.5281/zenodo.17162829
+    repository-code: "https://github.com/Computational-Ethnography-Lab/cmap_visualization_toolkit"
+    notes: >-
+      Portions of cmap_demo/viz.py are recycled from release v0.9.6 under
+      BSD 3-Clause, with per-function attribution headers.
