@@ -38,7 +38,7 @@ invented rows. Parsing proves syntax, not grounding.
 So `check_llm_response()` compares the returned `doc_id`s and row count against
 the local source before accepting anything, and rejects codes outside the
 allowed list. If a returned answer is internally consistent but disagrees with
-the source, the answer is wrong — not the source.
+the source, the answer is wrong, not the source.
 
 It rejects, with a specific message: a wrong row count, fabricated or renumbered
 `doc_id`s, a missing column, prose instead of CSV, and any code outside the
@@ -48,15 +48,15 @@ allowed four.
 
 `llm_reference_output.csv` is a real answer, not a mock-up.
 
-It was produced by giving an AI assistant the prompt text and nothing else — no
-access to this repository, no access to the dataset, and no tools of any kind —
-and then running the result through `check_llm_response()`, which passed: five
+It was produced by giving an AI assistant the prompt text and nothing else: no
+access to this repository, no access to the dataset, and no tools of any kind.
+The result was then run through `check_llm_response()`, which passed: five
 rows, `doc_id`s `0, 1, 3, 5, 7` matching the source, all codes within the
 allowed list.
 
 Two honest caveats. It comes from one assistant on one occasion, so treat it as
 a worked example rather than a benchmark. And because these models are not
-deterministic, your own run will not necessarily match it row for row — which is
+deterministic, your own run will not necessarily match it row for row. That is
 the point of checking every answer rather than trusting one.
 
 ## Doing this on your own data
@@ -77,5 +77,5 @@ Change the code vocabulary by editing `CONCEPT_DICTIONARIES` in
 validation in the check both read from it, so they cannot drift apart.
 
 Start with five rows while you are tuning the prompt. Scale up once the answers
-come back clean — and keep checking them, because the failure mode is a
+come back clean, and keep checking them, because the failure mode is a
 confident, well-formed answer about text the model never read.

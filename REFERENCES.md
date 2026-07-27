@@ -91,7 +91,7 @@ https://github.com/Computational-Ethnography-Lab/teaching#v-bibliography
 
 ## Data
 
-IEEE History Center. *Engineering and Technology History Wiki — Oral Histories.*
+IEEE History Center. *Engineering and Technology History Wiki: Oral Histories.*
 https://ethw.org/Oral-History:List_of_all_Oral_Histories
 
 Webscraped in the ASA 2022 workshop materials (Zhuofan Li), cleaned into CMAP format and

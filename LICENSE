@@ -1,11 +1,11 @@
-BSD 3-Clause License — CODE ONLY
+BSD 3-Clause License: CODE ONLY
 
 Copyright (c) 2026, Corey M. Abramson / Computational Ethnography Lab
 All rights reserved.
 
 SCOPE OF THIS LICENSE
 ---------------------
-This license covers the SOFTWARE in this repository only — the notebook,
+This license covers the SOFTWARE in this repository only: the notebook,
 the `cmap_demo/` package, and the synthetic sample transcript authored here.
 
 It does NOT cover the dataset in `data/1_cleaned_data.csv`. That corpus was

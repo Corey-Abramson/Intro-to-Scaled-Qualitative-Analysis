@@ -5,7 +5,7 @@ Orientation for an AI agent or a newcomer working in this repository.
 ## What this is
 
 A teaching repository: one notebook that runs a qualitative analysis workflow end to end
-on public interview data. It is built to be **plug and play** — someone opens it in Colab
+on public interview data. It is built to be **plug and play**: someone opens it in Colab
 during a workshop and it runs. Optimize every change for that.
 
 ## Layout
@@ -33,7 +33,7 @@ See `SAMPLE_DATA.md`.
 **Recycled code is attributed, not paraphrased.** Functions in `cmap_demo/viz.py` copied
 from the CMAP Visualization Toolkit carry a BSD-3 header naming the source file and
 release tag `v0.9.6`. If you modify one, say so in that header. Do not silently reword
-recycled code into look-alike code — that loses the attribution chain.
+recycled code into look-alike code; that loses the attribution chain.
 
 **`lizhuofan95/ASA2022_Workshop` has no license.** Link it and cite it. Never copy its
 code, redistribute its data, or reuse images from its slide deck.
@@ -53,7 +53,7 @@ placeholder.
 - Markdown cell states what and why; the code cell does it. Keep prose short.
 - It must run **locally and in Colab**. Colab resolves the repository root by looking for
   a sentinel; if absent it clones this repo at the pinned release tag. Do not make that
-  clone unconditional — it breaks local runs.
+  clone unconditional; it breaks local runs.
 - Pin seeds (`random_state=42`). Two runs should produce identical CSV output.
 - NLTK is optional. The word cloud falls back to a bundled stopword list and a regex
   tokenizer when NLTK data is unavailable. Test with downloads disabled.
@@ -69,7 +69,7 @@ jupyter nbconvert --to notebook --execute \
 ```
 
 The real test is a **clean clone** with `output/`, `__pycache__`, and NLTK caches removed
-— not the working tree that built it.
+, not the working tree that built it.
 
 ## Citations
 
