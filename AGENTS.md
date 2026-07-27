@@ -64,9 +64,16 @@ placeholder.
 ```bash
 pip install -r requirements.txt
 python -c "import cmap_demo.viz"          # must import in a clean subprocess
+
+# nbconvert is a development tool, not a runtime dependency, so it is not in
+# requirements.txt. Install it only if you want to execute the notebook headless.
+pip install nbconvert ipykernel
 jupyter nbconvert --to notebook --execute \
   notebook/intro_scaled_qualitative_analysis.ipynb --stdout > /dev/null
 ```
+
+Importing is not enough on its own: call each recycled function once as well, or a
+`NameError` that only fires mid-plot will pass a clean import.
 
 The real test is a **clean clone** with `output/`, `__pycache__`, and NLTK caches
 removed, not the working tree that built it.
