@@ -68,8 +68,8 @@ jupyter nbconvert --to notebook --execute \
   notebook/intro_scaled_qualitative_analysis.ipynb --stdout > /dev/null
 ```
 
-The real test is a **clean clone** with `output/`, `__pycache__`, and NLTK caches removed
-, not the working tree that built it.
+The real test is a **clean clone** with `output/`, `__pycache__`, and NLTK caches
+removed, not the working tree that built it.
 
 ## Citations
 
