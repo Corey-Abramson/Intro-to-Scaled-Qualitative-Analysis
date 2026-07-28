@@ -35,7 +35,7 @@ nltk_data/
 # deliberate exception; any other deck stays out.
 *.pptx
 *.key
-!slides/0_abramson_AIMS_v3.pptx
+!slides/0_abramson_AIMS_v4.pptx
 
 # Office lock files. These appear beside an open document and must never ship.
 ~$*
