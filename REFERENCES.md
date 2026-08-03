@@ -19,7 +19,7 @@ Replicability, and Validity for Realist Approaches to Ethnographic Analysis."
 
 Abramson, Corey M., Tara Prendergast, Zhuofan Li, and Daniel Dohan. 2026. "Qualitative
 Research in an Era of Artificial Intelligence: A Pragmatic Approach to Data Analysis,
-Workflow, and Computation." *Annual Review of Sociology* 52:20.1–20.27.
+Workflow, and Computation." *Annual Review of Sociology* 52(1):35–61.
 https://doi.org/10.1146/annurev-soc-011824-104836
 
 Abramson, Corey M. 2024. "From Carbon Paper to Code: Crafting Sociology in an Age of AI."
